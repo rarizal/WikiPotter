@@ -9,8 +9,8 @@ import Foundation
 
 class BookService {
     func getBooks() async throws -> [BookDataWrapper] {
-        let bookEndPoint = "https://api.potterdb.com/v1/books?page[size]=3"
-        
+       let bookEndPoint = "https://api.potterdb.com/v1/books"
+    
         guard let url = URL(string: bookEndPoint) else {
             throw BookError.invalidURL
         }

@@ -10,6 +10,7 @@ import Kingfisher
 
 struct BookView: View {
     @StateObject private var viewModel = BookViewModel()
+
     
     var body: some View {
         NavigationStack {
@@ -71,24 +72,27 @@ struct BookRecommendationView: View {
             // Scrollable item
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: [GridItem(.flexible())], spacing: 10) {
-                    ForEach(books) { book in
-                        VStack(alignment: .leading, spacing: 10) {
-                            KFImage(URL(string: book.attributes.cover))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: itemWidth, height: itemWidth/1.3, alignment: .bottom)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                            
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(book.attributes.title)
-                                    .font(.title3)
-                                    .fontWeight(.medium)
-                                Text(book.attributes.author)
-                                    .fontWeight(.regular)
-                                    .foregroundStyle(.secondary)
+                    ForEach(books.shuffled().prefix(4)) { book in
+                        NavigationLink { DetailsView(book: book)}
+                        label: {
+                            VStack(alignment: .leading, spacing: 10) {
+                                KFImage(URL(string: book.attributes.cover))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: itemWidth, height: itemWidth/1.3, alignment: .bottom)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(book.attributes.title)
+                                        .font(.title3)
+                                        .fontWeight(.medium)
+                                    Text(book.attributes.author)
+                                        .fontWeight(.regular)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
-                        }
-                        .frame(width: itemWidth)
+                            .frame(width: itemWidth)
+                        }.buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal)
@@ -110,6 +114,7 @@ struct BookAll: View {
     }
     
     var body: some View {
+        
         VStack(spacing: 15) {
             // Title
             HStack {
@@ -126,26 +131,28 @@ struct BookAll: View {
             
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(books) { book in
-                    VStack(spacing: 10) {
-                        KFImage(URL(string: book.attributes.cover))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: itemWidth)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(book.attributes.title)
-                                .font(.title3)
-                                .lineLimit(2)
-                                .fontWeight(.medium)
+                    NavigationLink(destination: DetailsView(book: book)) {
+                        VStack(spacing: 10) {
+                            KFImage(URL(string: book.attributes.cover))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: itemWidth)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             
-                            Text(book.attributes.author)
-                                .fontWeight(.regular)
-                                .foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(book.attributes.title)
+                                    .font(.title3)
+                                    .lineLimit(2)
+                                    .fontWeight(.medium)
+                                
+                                Text(book.attributes.author)
+                                    .fontWeight(.regular)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .frame(width: itemWidth)
+                        .frame(width: itemWidth)
+                    }.buttonStyle(.plain)
                 }
             }
             .padding(.horizontal)

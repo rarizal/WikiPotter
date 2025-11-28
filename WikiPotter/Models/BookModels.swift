@@ -13,6 +13,7 @@ struct BookDataResponse: Decodable {
 
 struct BookDataWrapper: Decodable, Identifiable {
     let id: String
+    let type: String
     let attributes: BookModel
 }
 
@@ -21,6 +22,8 @@ struct BookModel: Decodable {
     let summary:String
     let cover: String
     let author: String
+    let pages: Int
+    let release_date: String
 }
 
 enum BookError: Error {

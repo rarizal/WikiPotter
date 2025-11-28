@@ -9,39 +9,42 @@ import SwiftUI
 import Kingfisher
 
 struct DetailsView: View {
+    var book: BookDataWrapper
+    
     var body: some View {
         ScrollView (showsIndicators: false) {
             VStack (spacing: 20) {
-                KFImage(URL(string: "https://www.wizardingworld.com/images/products/books/UK/rectangle-2.jpg"))
+                KFImage(URL(string: book.attributes.cover))
                     .resizable()
                     .scaledToFill()
                     .frame(width: 350, height: 600)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                             
-                HStack (spacing: 10) {
-                    Text("Book")
+                HStack (spacing: 15) {
+                    Text(book.type.capitalized)
                         .font(.footnote)
                                 .foregroundColor(.secondary)
                                 .padding(8)
                                 .background(.gray.opacity(0.1), in: Capsule())
                     
-                    Text("251 pages")
+                    Text("\(book.attributes.pages) pages")
                         .font(.footnote)
                                 .foregroundColor(.secondary)
                                 .padding(8)
                                 .background(.gray.opacity(0.1), in: Capsule())
                     
-                    Text("1998-07-02")
+                    Text(book.attributes.release_date)
                         .font(.footnote)
                                 .foregroundColor(.secondary)
                                 .padding(8)
                                 .background(.gray.opacity(0.1), in: Capsule())
                 }
                 
-                Text("Harry Potter and the Chamber of Secrets")
+                Text(book.attributes.title)
                     .font(Font.largeTitle.bold())
                 
-                Text("A young boy discovers that he is a wizard and attends Hogwarts School of Witchcraft and Wizardry.")
+                Text(book.attributes.summary)
+                    .padding(.horizontal)
                 
             }
         }.padding()
@@ -50,6 +53,6 @@ struct DetailsView: View {
     }
 }
 
-#Preview {
-    DetailsView()
-}
+//#Preview {
+//    DetailsView()
+//}
