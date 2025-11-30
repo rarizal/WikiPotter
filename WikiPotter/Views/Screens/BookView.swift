@@ -46,10 +46,8 @@ struct BookView: View {
 }
 
 struct BookRecommendationView: View {
-    // No need for Binding, we are just reading data
     let books: [BookDataWrapper]
     
-    // Computed property for clean layout logic
     private var itemWidth: CGFloat {
         UIScreen.main.bounds.width - 60
     }
@@ -73,7 +71,7 @@ struct BookRecommendationView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: [GridItem(.flexible())], spacing: 10) {
                     ForEach(books.shuffled().prefix(4)) { book in
-                        NavigationLink { DetailsView(book: book)}
+                        NavigationLink { DetailsView(item: book)}
                         label: {
                             VStack(alignment: .leading, spacing: 10) {
                                 KFImage(URL(string: book.attributes.cover))
@@ -86,6 +84,7 @@ struct BookRecommendationView: View {
                                     Text(book.attributes.title)
                                         .font(.title3)
                                         .fontWeight(.medium)
+                                        .frame(height:20)
                                     Text(book.attributes.author)
                                         .fontWeight(.regular)
                                         .foregroundStyle(.secondary)
@@ -131,7 +130,7 @@ struct BookAll: View {
             
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(books) { book in
-                    NavigationLink(destination: DetailsView(book: book)) {
+                    NavigationLink(destination: DetailsView(item: book)) {
                         VStack(spacing: 10) {
                             KFImage(URL(string: book.attributes.cover))
                                 .resizable()
@@ -160,6 +159,6 @@ struct BookAll: View {
     }
 }
 
-#Preview {
-    BookView()
-}
+//#Preview {
+//    BookView()
+//}

@@ -15,7 +15,7 @@ struct HomeScreenView: View {
                     }
                     
                     Tab ("Characters", systemImage: "triangle.fill") {
-                        Text("Characters here")
+                        CharacterView()
                     }
                     
                     Tab ("Movies", systemImage: "square.fill") {

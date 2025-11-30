@@ -11,10 +11,15 @@ struct BookDataResponse: Decodable {
     let data: [BookDataWrapper]
 }
 
-struct BookDataWrapper: Decodable, Identifiable {
+struct BookDataWrapper: Decodable, Identifiable, DetailProtocol {
     let id: String
     let type: String
     let attributes: BookModel
+    
+    // Detail Protocol
+    var name: String { attributes.title }
+    var image: String {attributes.cover}
+    var description: String {attributes.summary}
 }
 
 struct BookModel: Decodable {
