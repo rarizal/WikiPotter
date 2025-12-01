@@ -33,7 +33,6 @@ class BookViewModel: ObservableObject {
         } catch {
             self.errorMessage = "Unknown error: \(error.localizedDescription)"
         }
-        
         self.isLoading = false
     }
 }

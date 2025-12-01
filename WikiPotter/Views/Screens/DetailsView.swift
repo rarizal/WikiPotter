@@ -14,31 +14,19 @@ struct DetailsView<T: DetailProtocol>: View {
     var body: some View {
         ScrollView (showsIndicators: false) {
             VStack (spacing: 20) {
-                KFImage(URL(string: item.image))
-                    .resizable()
+                
+                Group {
+                    if let url = URL(string: item.image), url.scheme != nil {
+                        KFImage(url)
+                            .resizable()
+                    } else {
+                        Image(item.image)
+                            .resizable()
+                    }
+                }
                     .scaledToFill()
                     .frame(width: 350, height: 600)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                            
-//                HStack (spacing: 15) {
-//                    Text(item.type.capitalized)
-//                        .font(.footnote)
-//                                .foregroundColor(.secondary)
-//                                .padding(8)
-//                                .background(.gray.opacity(0.1), in: Capsule())
-//                    
-//                    Text("\(item.attributes.pages) pages")
-//                        .font(.footnote)
-//                                .foregroundColor(.secondary)
-//                                .padding(8)
-//                                .background(.gray.opacity(0.1), in: Capsule())
-//                    
-//                    Text(item.attributes.release_date)
-//                        .font(.footnote)
-//                                .foregroundColor(.secondary)
-//                                .padding(8)
-//                                .background(.gray.opacity(0.1), in: Capsule())
-//                }
                 
                 Text(item.name)
                     .font(Font.largeTitle.bold())

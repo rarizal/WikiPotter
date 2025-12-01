@@ -17,8 +17,8 @@ struct CharacterDataWrapper: Decodable, Identifiable, DetailProtocol {
     
     // Detail Protocol
     var name: String { attributes.name ?? "Name" }
-    var image: String { attributes.image ?? "Image" }
-    var description: String { attributes.house ?? "House" }
+    var image: String { attributes.image ?? "noAvatar" }
+    var description: String { attributes.house ?? "No House" }
 }
 
 struct CharacterModel: Decodable {

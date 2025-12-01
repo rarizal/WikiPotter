@@ -1,5 +1,5 @@
 //
-//  CharacterView.swift
+//  Potion.swift
 //  WikiPotter
 //
 //  Created by Rizal Khanafi on 24/11/25.
@@ -8,16 +8,15 @@
 import SwiftUI
 import Kingfisher
 
-struct CharacterView: View {
-    @StateObject private var viewModel = CharacterViewModel()
-    @State private var isAccending: Bool = true
+struct PotionView: View {
+    @StateObject private var viewModel = PotionViewModel()
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 25) {
                     if viewModel.isLoading {
-                        ProgressView("Loading Characters...")
+                        ProgressView("Loading Potions...")
                             .padding(.top, 50)
                     } else if let error = viewModel.errorMessage {
                         // Error State
@@ -30,34 +29,16 @@ struct CharacterView: View {
                         }
                         .padding(.top, 50)
                     } else {
-                        // All Characters
-                        CharacterAll(characters: isAccending ? viewModel.characters : viewModel.characters.reversed())
+                        // All Potions
+                        PotionAll(potions: viewModel.potions)
                     }
                 }
             }
-            .navigationTitle(Text("Characters"))
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing){
-                    
-                    Menu{
-                        Button("Accending Name", systemImage: isAccending ? "checkmark" : ""){
-                            isAccending = true
-                            print("Accent")
-                        }
-                        
-                        Button("Descending Name", systemImage: isAccending ? "": "checkmark"){
-                            isAccending = false
-                            print("Descend")
-                        }
-                        
-                    } label: {
-                        Label("More", systemImage: "arrow.up.arrow.down")
-                    }
-                }
-            }
+            .navigationTitle(Text("Potions"))
+          
         }
         .task {
-            await viewModel.loadCharacters()
+            await viewModel.loadPotions()
         }
     }
     
@@ -65,8 +46,8 @@ struct CharacterView: View {
 }
 
 
-struct CharacterAll: View {
-    let characters: [CharacterDataWrapper]
+struct PotionAll: View {
+    let potions: [PotionDataWrapper]
     
     let columns = [
         GridItem(.flexible()),
@@ -82,7 +63,7 @@ struct CharacterAll: View {
         VStack(spacing: 15) {
             // Title
             HStack {
-                Text("All Characters")
+                Text("All Potions")
                     .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
@@ -94,31 +75,31 @@ struct CharacterAll: View {
             .padding(.horizontal)
             
             LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(characters) { character in
-                    NavigationLink(destination: DetailsView(item: character)) {
+                ForEach(potions) { potion in
+                    NavigationLink(destination: DetailsView(item: potion)) {
                         VStack(spacing: 10) {
-            
-                            
                             Group {
-                                if let imageString = character.attributes.image,
+                                if let imageString = potion.attributes.image,
                                    let url = URL(string: imageString) {
                                     KFImage(url)
                                         .resizable()
                                 } else {
-                                    Image("noAvatar")
+              
+                                    Image("noPotion")
                                         .resizable()
                                 }
                             }
+                            // 3. Shared Modifiers (Applied to whichever image is chosen)
                             .scaledToFill()
                             .frame(width: itemWidth, height: itemWidth)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(character.attributes.name ?? "No Name")
+                                Text(potion.attributes.name)
                                     .font(.title3)
                                     .lineLimit(1)
                                     .fontWeight(.medium)
                                 
-                                Text(character.attributes.house ?? "No House")
+                                Text(potion.attributes.difficulty ?? "Unknown")
                                     .fontWeight(.regular)
                                     .foregroundStyle(.secondary)
                             }
@@ -134,5 +115,5 @@ struct CharacterAll: View {
 }
 
 //#Preview {
-//    CharacterView()
+//    PotionView()
 //}

@@ -19,15 +19,15 @@ struct HomeScreenView: View {
                     }
                     
                     Tab ("Movies", systemImage: "square.fill") {
-                        Text("Movies here")
+                        MovieView()
                     }
                     
                     Tab ("Potions", systemImage: "pentagon.fill") {
-                        Text("Potions here")
+                        PotionView()
                     }
                     
                     Tab ("Spells", systemImage: "hexagon.fill") {
-                        Text("Heart")
+                        SpellView()
                     }
                 }
                 .tabBarMinimizeBehavior(.onScrollDown)

@@ -10,7 +10,7 @@ import Foundation
 class CharacterService {
     func getCharacters() async throws -> [CharacterDataWrapper] {
         
-        let characterEndPoint = "https://api.potterdb.com/v1/characters"
+        let characterEndPoint = "https://api.potterdb.com/v1/characters?sort=name"
         
         guard let url = URL(string: characterEndPoint) else {
             throw CharacterError.invalidURL

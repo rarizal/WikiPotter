@@ -1,23 +1,22 @@
 //
-//  BookView.swift
+//  MovieView.swift
 //  WikiPotter
 //
-//  Created by Rizal Khanafi on 24/11/25.
+//  Created by Rizal Khanafi on 01/12/25.
 //
 
 import SwiftUI
 import Kingfisher
 
-struct BookView: View {
-    @StateObject private var viewModel = BookViewModel()
-
+struct MovieView: View {
+    @StateObject var viewModel = MovieViewModel()
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 25) {
                     if viewModel.isLoading {
-                        ProgressView("Loading Books...")
+                        ProgressView("Loading Movies...")
                             .padding(.top, 50)
                     } else if let error = viewModel.errorMessage {
                         // Error State
@@ -31,30 +30,29 @@ struct BookView: View {
                         .padding(.top, 50)
                     } else {
                         // Recommendation
-                        BookRecommendationView(books: viewModel.books)
-                        // All Books
-                        BookAll(books: viewModel.books)
+                        MovieRecommendationView(movies: viewModel.movies)
+                        // All Movie
+                        MovieAll(movies: viewModel.movies)
                     }
                 }
             }
-            .navigationTitle(Text("Books"))
+            .navigationTitle(Text("Movies"))
         }
         .task {
-            await viewModel.loadBooks()
+            await viewModel.loadMovies()
         }
     }
 }
 
-struct BookRecommendationView: View {
-    let books: [BookDataWrapper]
+struct MovieRecommendationView: View {
+    let movies: [MovieDataWrapper]
     
     private var itemWidth: CGFloat {
         UIScreen.main.bounds.width - 60
     }
-   
+    
     var body: some View {
-        VStack(spacing: 15) { 
-            // Title
+        VStack(spacing: 15) {
             HStack {
                 Text("For You")
                     .font(.title2)
@@ -70,22 +68,22 @@ struct BookRecommendationView: View {
             // Scrollable item
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: [GridItem(.flexible())], spacing: 10) {
-                    ForEach(books.shuffled().prefix(4)) { book in
-                        NavigationLink { DetailsView(item: book)}
+                    ForEach(movies.shuffled().prefix(4)) { movie in
+                        NavigationLink { DetailsView(item: movie)}
                         label: {
                             VStack(alignment: .leading, spacing: 10) {
-                                KFImage(URL(string: book.attributes.cover))
+                                KFImage(URL(string: movie.attributes.poster))
                                     .resizable()
                                     .scaledToFill()
-                                    .frame(width: itemWidth, height: itemWidth/1.3, alignment: .bottom)
+                                    .frame(width: itemWidth, alignment: .bottom)
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
                                 
                                 VStack(alignment: .leading, spacing: 5) {
-                                    Text(book.attributes.title)
+                                    Text(movie.attributes.title)
                                         .font(.title3)
                                         .fontWeight(.medium)
                                         .frame(height:20)
-                                    Text(book.attributes.author)
+                                    Text(movie.attributes.runningTime)
                                         .fontWeight(.regular)
                                         .foregroundStyle(.secondary)
                                 }
@@ -100,8 +98,8 @@ struct BookRecommendationView: View {
     }
 }
 
-struct BookAll: View {
-    let books: [BookDataWrapper]
+struct MovieAll: View {
+    let movies: [MovieDataWrapper]
     
     let columns = [
         GridItem(.flexible()),
@@ -129,22 +127,22 @@ struct BookAll: View {
             .padding(.horizontal)
             
             LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(books) { book in
-                    NavigationLink(destination: DetailsView(item: book)) {
+                ForEach(movies) { movie in
+                    NavigationLink(destination: DetailsView(item: movie)) {
                         VStack(spacing: 10) {
-                            KFImage(URL(string: book.attributes.cover))
+                            KFImage(URL(string: movie.attributes.poster))
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: itemWidth)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(book.attributes.title)
+                                Text(movie.attributes.title)
                                     .font(.title3)
                                     .lineLimit(2)
                                     .fontWeight(.medium)
                                 
-                                Text(book.attributes.author)
+                                Text(movie.attributes.runningTime)
                                     .fontWeight(.regular)
                                     .foregroundStyle(.secondary)
                             }
@@ -160,5 +158,5 @@ struct BookAll: View {
 }
 
 //#Preview {
-//    BookView()
+//    MovieView()
 //}
