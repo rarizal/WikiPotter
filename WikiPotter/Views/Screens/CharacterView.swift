@@ -10,7 +10,7 @@ import Kingfisher
 
 struct CharacterView: View {
     @StateObject private var viewModel = CharacterViewModel()
-    @State private var isAccending: Bool = true
+
 
     var body: some View {
         NavigationStack {
@@ -20,7 +20,7 @@ struct CharacterView: View {
                         ProgressView("Loading Characters...")
                             .padding(.top, 50)
                     } else if let error = viewModel.errorMessage {
-                        // Error State
+                        // Error States
                         VStack {
                             Image(systemName: "exclamationmark.triangle")
                                 .font(.largeTitle)
@@ -31,7 +31,8 @@ struct CharacterView: View {
                         .padding(.top, 50)
                     } else {
                         // All Characters
-                        CharacterAll(characters: isAccending ? viewModel.characters : viewModel.characters.reversed())
+//                        CharacterAll(characters: viewModel.isAccending ? viewModel.characters : viewModel.characters.reversed())
+                        CharacterAll(characters: viewModel.characters)
                     }
                 }
             }
@@ -40,15 +41,16 @@ struct CharacterView: View {
                 ToolbarItem(placement: .topBarTrailing){
                     
                     Menu{
-                        Button("Accending Name", systemImage: isAccending ? "checkmark" : ""){
-                            isAccending = true
-                            print("Accent")
-                        }
+                        Button("Accending", systemImage: viewModel.isAccending ? "checkmark" : ""){
+                            Task {
+                                
+                                await viewModel.sortToggle() }
+                        }.disabled(viewModel.isAccending)
                         
-                        Button("Descending Name", systemImage: isAccending ? "": "checkmark"){
-                            isAccending = false
-                            print("Descend")
-                        }
+                        Button("Descending", systemImage: viewModel.isAccending ? "": "checkmark"){
+                            Task {
+                                await viewModel.sortToggle() }
+                        }.disabled(!viewModel.isAccending)
                         
                     } label: {
                         Label("More", systemImage: "arrow.up.arrow.down")
@@ -67,6 +69,7 @@ struct CharacterView: View {
 
 struct CharacterAll: View {
     let characters: [CharacterDataWrapper]
+    @StateObject private var viewModel = CharacterViewModel()
     
     let columns = [
         GridItem(.flexible()),
@@ -86,6 +89,9 @@ struct CharacterAll: View {
                     .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
+                    .onTapGesture {
+                        print(viewModel.isAccending)
+                    }
                 Image(systemName: "chevron.right")
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
@@ -97,8 +103,6 @@ struct CharacterAll: View {
                 ForEach(characters) { character in
                     NavigationLink(destination: DetailsView(item: character)) {
                         VStack(spacing: 10) {
-            
-                            
                             Group {
                                 if let imageString = character.attributes.image,
                                    let url = URL(string: imageString) {
@@ -133,6 +137,7 @@ struct CharacterAll: View {
     }
 }
 
-//#Preview {
-//    CharacterView()
-//}
+#Preview {
+    CharacterView()
+}
+

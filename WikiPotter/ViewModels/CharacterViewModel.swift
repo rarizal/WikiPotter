@@ -12,8 +12,10 @@ import Combine
 class CharacterViewModel: ObservableObject {
     
     @Published var characters: [CharacterDataWrapper] = []
+    @Published var pagination: CharacterPaginationWrapper?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
+    @Published var isAccending: Bool = true
     
     private let service = CharacterService()
     
@@ -22,17 +24,23 @@ class CharacterViewModel: ObservableObject {
         self.errorMessage = nil
         
         do {
-            let fetchedCharacters = try await service.getCharacters()
+            let fetchedCharacters = try await service.getCharacters(isAscending: self.isAccending)
             self.characters = fetchedCharacters
         } catch CharacterError.invalidURL {
             self.errorMessage = "Invalid URL"
         } catch CharacterError.invalidData {
-            self.errorMessage = "Invalid Data VM"
+            self.errorMessage = "Invalid Data"
         } catch CharacterError.invalidResponse {
             self.errorMessage = "Invalid Response from server"
         } catch {
             self.errorMessage = "Unknown Error: \(error.localizedDescription)"
         }
         self.isLoading = false
+    }
+    
+    func sortToggle() async {
+        self.isAccending.toggle()
+        await loadCharacters()
+
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 class CharacterService {
-    func getCharacters() async throws -> [CharacterDataWrapper] {
-        
-        let characterEndPoint = "https://api.potterdb.com/v1/characters?sort=name"
+    
+    func getCharacters(isAscending: Bool) async throws -> [CharacterDataWrapper] {
+        let characterEndPoint: String = isAscending ? "https://api.potterdb.com/v1/characters?sort=name&page[number]=1&page[size]=25" : "https://api.potterdb.com/v1/characters?sort=-name&page[number]=1&page[size]=25"
         
         guard let url = URL(string: characterEndPoint) else {
             throw CharacterError.invalidURL
